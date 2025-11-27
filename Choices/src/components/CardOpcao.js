@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StyleSheet, Text, Animated, PanResponder, Dimensions } from 'react-native';
+import { StyleSheet, Text, Animated, PanResponder, Dimensions, Platform } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -10,18 +10,22 @@ export default function CardOpcao({ item, onSwipeLeft, onSwipeRight }) {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
+      onPanResponderTerminationRequest: () => false, //Para o navegador nao "roubar" o arrastar
       onPanResponderMove: Animated.event(
         [null, { dx: pan.x, dy: pan.y }],
         { useNativeDriver: false }
       ),
       onPanResponderRelease: (e, gestureState) => {
-        if (gestureState.dx > 120) { // Direita
+
+        const threshold = Platform.OS === 'web' ? 80 : 120;
+
+        if (gestureState.dx > threshold) { // Direita
           Animated.timing(pan, {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
             duration: 200,
             useNativeDriver: false,
           }).start(() => onSwipeRight());
-        } else if (gestureState.dx < -120) { // Esquerda
+        } else if (gestureState.dx < -threshold) { // Esquerda
           Animated.timing(pan, {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
             duration: 200,
@@ -84,5 +88,14 @@ const styles = StyleSheet.create({
     color: '#999',
     position: 'absolute',
     bottom: 20
+  },
+  // ESTILOS EXCLUSIVOS PARA WEB (O React Native Web entende esses estilos)
+  webStyle: {
+    userSelect: 'none',   // Impede selecionar o texto (crucial para o arraste funcionar)
+    cursor: 'grab',       // Mostra a "mãozinha" do mouse
+    touchAction: 'none'   // Impede comportamentos padrão de toque do navegador
+  },
+  webText: {
+    userSelect: 'none',   // Reforça a não-seleção nos textos
   }
 });

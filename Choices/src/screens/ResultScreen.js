@@ -30,10 +30,11 @@ export default function ResultScreen({ navigation }) {
       
       headerLeft: () => (
         <TouchableOpacity onPress={handleReiniciar} style={styles.headerButton}>
-          <Text style={styles.headerButtonText}>{'<'} Início</Text>
+          <Text style={styles.headerButtonText}>{'<<'}</Text>
         </TouchableOpacity>
       ),
-      title: 'Resultado Final'
+      title: 'Resultado Final',
+      headerTitleAlign: 'center'
     });
   }, [navigation]);
 
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 26, fontWeight: 'bold', marginTop: 10, marginBottom: 20, color: '#f1c40f', textAlign: 'center' },
   
   headerButton: { marginLeft: 0, padding: 10 },
-  headerButtonText: { fontSize: 17, color: '#007AFF', fontWeight: 'bold' },
+  headerButtonText: { fontSize: 17, color: '#000000ff', fontWeight: 'bold' },
 
   winnerCard: { 
     backgroundColor: '#4a90e2', padding: 20, borderRadius: 20, width: '100%', alignItems: 'center',

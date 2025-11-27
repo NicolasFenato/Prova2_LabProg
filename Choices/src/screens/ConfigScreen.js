@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, Keyboard, Platform } from 'react-native'; // <--- Não esqueça de importar Platform
 import { GameContext } from '../context/GameContext';
 
 export default function ConfigScreen({ navigation }) {
@@ -13,20 +13,24 @@ export default function ConfigScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
-  // NOVA LÓGICA: Incrementar e Decrementar
   const alterarParticipantes = (quantidade) => {
     const novoValor = participantes + quantidade;
-    // Impede que tenhamos menos de 1 participante
-    if (novoValor >= 2) {
+    if (novoValor >= 1) {
       setParticipantes(novoValor);
     }
   };
 
   const handleStart = () => {
+    // CORREÇÃO AQUI: Validação compatível com Web
     if (opcoes.length < 2) {
-      Alert.alert('Erro', 'Adicione pelo menos 2 opções!');
+      if (Platform.OS === 'web') {
+        alert('Erro: Adicione pelo menos 2 opções!');
+      } else {
+        Alert.alert('Erro', 'Adicione pelo menos 2 opções!');
+      }
       return;
     }
+
     setJogadorAtual(1);
     setJogoFinalizado(false);
     navigation.navigate('Votação');
@@ -34,11 +38,10 @@ export default function ConfigScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Configurar Choices</Text>
+      <Text style={styles.title}>Configurar Opções</Text>
 
       <Text style={styles.label}>Número de Jogadores:</Text>
       
-      {/* NOVO CONTROLE DE PARTICIPANTES */}
       <View style={styles.counterContainer}>
         <TouchableOpacity style={styles.counterBtn} onPress={() => alterarParticipantes(-1)}>
           <Text style={styles.counterText}>-</Text>
@@ -87,7 +90,6 @@ const styles = StyleSheet.create({
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: '#444' },
   label: { fontSize: 16, marginBottom: 5, color: '#666' },
   
-  /* ESTILOS NOVOS PARA O CONTADOR */
   counterContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
   counterBtn: { backgroundColor: '#ddd', width: 40, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20 },
   counterText: { fontSize: 24, fontWeight: 'bold', color: '#333' },

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Platform } from 'react-native'; // <--- Importar Platform
 import { GameContext } from '../context/GameContext';
 import CardOpcao from '../components/CardOpcao';
 
@@ -7,44 +7,53 @@ export default function VoteScreen({ navigation }) {
   const { opcoes, computarVoto, participantes, jogadorAtual, setJogadorAtual, setJogoFinalizado } = useContext(GameContext);
   const [indexAtual, setIndexAtual] = useState(0);
   
-  // Estado para controlar a cor de fundo (flash)
   const [backgroundColor, setBackgroundColor] = useState('#f0f2f5');
 
-  // Reseta o índice sempre que muda o jogador
   useEffect(() => {
     setIndexAtual(0);
   }, [jogadorAtual]);
 
-  // Função para piscar a tela
   const triggerFlash = (isLike) => {
     if (isLike) {
-      setBackgroundColor('rgba(46, 204, 113, 0.3)'); // Verde suave
+      setBackgroundColor('rgba(46, 204, 113, 0.3)');
     } else {
-      setBackgroundColor('rgba(231, 76, 60, 0.3)'); // Vermelho suave
+      setBackgroundColor('rgba(231, 76, 60, 0.3)');
     }
 
     setTimeout(() => {
-      setBackgroundColor('#f0f2f5'); // Volta a cor original
+      setBackgroundColor('#f0f2f5');
     }, 200);
   };
 
   const handleSwipe = (gostou) => {
     triggerFlash(gostou);
     
-    // Pega o ID antes de mudar o índice
     const idParaVotar = opcoes[indexAtual].id;
     computarVoto(idParaVotar, gostou);
 
     if (indexAtual < opcoes.length - 1) {
+      // Ainda há cartas para este jogador
       setIndexAtual(indexAtual + 1);
     } else {
+      // Acabaram as cartas deste jogador
       if (jogadorAtual < participantes) {
-        Alert.alert(
-          "Fim do Turno!", 
-          `Passe o celular para o Jogador ${jogadorAtual + 1}`,
-          [{ text: "OK", onPress: () => setJogadorAtual(jogadorAtual + 1) }]
-        );
+        
+        // CORREÇÃO AQUI: Lógica diferente para Web vs Mobile
+        if (Platform.OS === 'web') {
+            // Na Web, usamos o alert nativo que bloqueia a execução até fechar
+            alert(`Fim do Turno! Passe para o Jogador ${jogadorAtual + 1}`);
+            setJogadorAtual(jogadorAtual + 1);
+        } else {
+            // No Mobile, usamos o Alert.alert bonitinho com botão
+            Alert.alert(
+              "Fim do Turno!", 
+              `Passe o celular para o Jogador ${jogadorAtual + 1}`,
+              [{ text: "OK", onPress: () => setJogadorAtual(jogadorAtual + 1) }]
+            );
+        }
+
       } else {
+        // Fim do Jogo
         setJogoFinalizado(true);
         navigation.navigate('Resultado');
       }
@@ -69,7 +78,6 @@ export default function VoteScreen({ navigation }) {
       <Text style={styles.progressText}>Opção {indexAtual + 1} de {opcoes.length}</Text>
       
       <View style={styles.cardContainer}>
-        {/* O segredo está aqui: KEY única força recriação do componente */}
         <CardOpcao 
           key={opcoes[indexAtual].id} 
           item={opcoes[indexAtual]}
