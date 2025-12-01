@@ -87,4 +87,4 @@ O componente de cartões não utiliza bibliotecas de terceiros para o efeito de 
 ## 2. Navegação Aninhada e Proteção
 Foi utilizada uma estratégia de Nested Navigation (Tabs dentro de uma Stack). Além disso, foram implementados Route Guards via listeners no TabNavigator para interceptar ações do usuário e garantir a integridade do estado do jogo.
 
-Desenvolvido por Nicolas Fenato.
+## Desenvolvido por Nicolas Fenato.
