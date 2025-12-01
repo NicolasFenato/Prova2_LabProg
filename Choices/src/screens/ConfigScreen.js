@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, Keyboard, Platform } from 'react-native'; // <--- Não esqueça de importar Platform
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, Keyboard, Platform } from 'react-native'; 
 import { GameContext } from '../context/GameContext';
 
 export default function ConfigScreen({ navigation }) {
+
   const { participantes, setParticipantes, opcoes, adicionarOpcao, setJogadorAtual, setJogoFinalizado, setJogoEmAndamento } = useContext(GameContext);
   const [textoOpcao, setTextoOpcao] = useState('');
 
@@ -21,7 +22,6 @@ export default function ConfigScreen({ navigation }) {
   };
 
   const handleStart = () => {
-    // CORREÇÃO AQUI: Validação compatível com Web
     if (opcoes.length < 2) {
       if (Platform.OS === 'web') {
         alert('Erro: Adicione pelo menos 2 opções!');
@@ -35,6 +35,7 @@ export default function ConfigScreen({ navigation }) {
     setJogoFinalizado(false);
     setJogoEmAndamento(true);
     navigation.navigate('Votação');
+
   };
 
   return (
@@ -84,23 +85,103 @@ export default function ConfigScreen({ navigation }) {
       </TouchableOpacity>
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#f5f5f5', paddingTop: 50 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: '#444' },
-  label: { fontSize: 16, marginBottom: 5, color: '#666' },
-  
-  counterContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
-  counterBtn: { backgroundColor: '#ddd', width: 40, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20 },
-  counterText: { fontSize: 24, fontWeight: 'bold', color: '#333' },
-  counterValue: { fontSize: 24, fontWeight: 'bold', marginHorizontal: 20 },
+  container: { 
+    flex: 1,
+    padding: 20, 
+    backgroundColor: '#f5f5f5', 
+    paddingTop: 50 
+  },
 
-  input: { backgroundColor: '#fff', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#ddd', marginBottom: 15 },
-  inputRow: { flexDirection: 'row', alignItems: 'center' },
-  addButton: { backgroundColor: '#4a90e2', padding: 15, borderRadius: 8, marginLeft: 10, marginBottom: 15 },
-  startButton: { backgroundColor: '#2ecc71', padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 20 },
-  btnText: { color: '#fff', fontWeight: 'bold' },
-  itemOpcao: { backgroundColor: '#fff', padding: 15, borderRadius: 8, marginBottom: 5, borderWidth: 1, borderColor: '#eee' },
+  title: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    textAlign: 'center', 
+    color: '#444' 
+  },
+
+  label: { 
+    fontSize: 16, 
+    marginBottom: 5, 
+    color: '#666' 
+  },
+  
+  counterContainer: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    marginBottom: 20 
+  },
+
+  counterBtn: { 
+    backgroundColor: '#ddd', 
+    width: 40, 
+    height: 40, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 20 
+  },
+
+  counterText: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    color: '#333' 
+  },
+
+  counterValue: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginHorizontal: 20 
+  },
+
+  input: { 
+    backgroundColor: '#fff', 
+    padding: 10, 
+    borderRadius: 8, 
+    borderWidth: 1, 
+    borderColor: '#ddd', 
+    marginBottom: 15 
+  },
+
+  inputRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center' 
+  },
+    
+  addButton: { 
+    backgroundColor: '#4a90e2', 
+    padding: 15,
+    borderRadius: 8, 
+    marginLeft: 10, 
+    marginBottom: 15 
+  },
+
+  startButton: { 
+    backgroundColor: '#2ecc71', 
+    padding: 15, 
+    borderRadius: 8, 
+    alignItems: 'center', 
+    marginTop: 20 
+  },
+
+  btnText: { 
+    color: '#fff', 
+    fontWeight: 'bold' 
+  },
+
+  itemOpcao: { 
+    backgroundColor: '#fff', 
+    padding: 15, 
+    borderRadius: 8, 
+    marginBottom: 5, 
+    borderWidth: 1, 
+    borderColor: '#eee' 
+  },
+
   list: { maxHeight: 200 }
+
 });

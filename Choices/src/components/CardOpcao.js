@@ -4,13 +4,13 @@ import { StyleSheet, Text, Animated, PanResponder, Dimensions, Platform } from '
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function CardOpcao({ item, onSwipeLeft, onSwipeRight }) {
-  // O valor começa sempre zerado (0,0)
+  
   const pan = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderTerminationRequest: () => false, //Para o navegador nao "roubar" o arrastar
+      onPanResponderTerminationRequest: () => false,
       onPanResponderMove: Animated.event(
         [null, { dx: pan.x, dy: pan.y }],
         { useNativeDriver: false }
@@ -19,19 +19,19 @@ export default function CardOpcao({ item, onSwipeLeft, onSwipeRight }) {
 
         const threshold = Platform.OS === 'web' ? 80 : 120;
 
-        if (gestureState.dx > threshold) { // Direita
+        if (gestureState.dx > threshold) { 
           Animated.timing(pan, {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
             duration: 200,
             useNativeDriver: false,
           }).start(() => onSwipeRight());
-        } else if (gestureState.dx < -threshold) { // Esquerda
+        } else if (gestureState.dx < -threshold) {
           Animated.timing(pan, {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
             duration: 200,
             useNativeDriver: false,
           }).start(() => onSwipeLeft());
-        } else { // Reset
+        } else {
           Animated.spring(pan, {
             toValue: { x: 0, y: 0 },
             friction: 5,
@@ -57,10 +57,11 @@ export default function CardOpcao({ item, onSwipeLeft, onSwipeRight }) {
       <Text style={styles.instruction}>Arraste para Esquerda ou Direita</Text>
     </Animated.View>
   );
+
 }
 
-// AQUI ESTÁ A PARTE QUE FALTOU:
 const styles = StyleSheet.create({
+
   card: {
     height: 300,
     width: '90%',
@@ -77,25 +78,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd'
   },
+
   text: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20
   },
+
   instruction: {
     fontSize: 14,
     color: '#999',
     position: 'absolute',
     bottom: 20
   },
-  // ESTILOS EXCLUSIVOS PARA WEB (O React Native Web entende esses estilos)
+  
   webStyle: {
-    userSelect: 'none',   // Impede selecionar o texto (crucial para o arraste funcionar)
-    cursor: 'grab',       // Mostra a "mãozinha" do mouse
-    touchAction: 'none'   // Impede comportamentos padrão de toque do navegador
+    userSelect: 'none',  
+    cursor: 'grab',       
+    touchAction: 'none'  
   },
+
   webText: {
-    userSelect: 'none',   // Reforça a não-seleção nos textos
+    userSelect: 'none',   
   }
+
 });

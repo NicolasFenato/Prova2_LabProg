@@ -4,10 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-
-// Importação do Contexto para verificar as opções
 import { GameContext } from '../context/GameContext';
-
 import ConfigScreen from '../screens/ConfigScreen';
 import VoteScreen from '../screens/VoteScreen';
 import ResultScreen from '../screens/ResultScreen';
@@ -16,46 +13,43 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
-  // AQUI É A MÁGICA: Pegamos as opções direto do contexto
+
   const { opcoes, jogoEmAndamento } = useContext(GameContext);
 
   return (
+
     <Tab.Navigator screenOptions={({ route }) => ({
         headerShown: false,
-        // NOVA CONFIGURAÇÃO DE ÍCONES:
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name === 'Configuração') {
-            // Ícone de engrenagem (cheio se selecionado, contorno se não)
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Votação') {
-            // Ícone de cartas ou check (cheio se selecionado, contorno se não)
             iconName = focused ? 'layers' : 'layers-outline';
           }
 
-          // Retorna o componente de ícone
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#4a90e2', // Cor azul quando ativo
-        tabBarInactiveTintColor: 'gray',  // Cor cinza quando inativo
-      })}
-    >
+
+        tabBarActiveTintColor: '#4a90e2', 
+        tabBarInactiveTintColor: 'gray',  
+      })}>
+
       <Tab.Screen 
         name="Configuração" 
         component={ConfigScreen}
         listeners={{
           tabPress: (e) => {
-            // SE O JOGO ESTIVER ROLANDO, BLOQUEIA:
             if (jogoEmAndamento) {
-              e.preventDefault(); // Cancela a mudança de aba
+              e.preventDefault();
               
-              // Exibe o alerta (Código Híbrido Web/Mobile)
               if (Platform.OS === 'web') {
                 alert('Jogo em andamento! Termine a partida para reconfigurar.');
               } else {
                 Alert.alert('Jogo em andamento', 'Você não pode alterar as configurações durante a partida.');
               }
+
             }
           },
         }}
