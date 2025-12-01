@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Platform } from 'react-native'; // <--- Importar Platform
+import { Ionicons } from '@expo/vector-icons';
 import { GameContext } from '../context/GameContext';
 import CardOpcao from '../components/CardOpcao';
 
@@ -76,6 +77,20 @@ export default function VoteScreen({ navigation }) {
     <View style={[styles.container, { backgroundColor: backgroundColor }]}>
       <Text style={styles.turnText}>Vez do Jogador {jogadorAtual}</Text>
       <Text style={styles.progressText}>Opção {indexAtual + 1} de {opcoes.length}</Text>
+
+      <View style={styles.indicatorsContainer}>
+        {/* Lado Esquerdo: Lixeira (Rejeitar) */}
+        <View style={styles.indicatorLeft}>
+          <Ionicons name="trash-outline" size={50} color="rgba(231, 76, 60, 0.5)" />
+          <Text style={styles.indicatorTextLeft}>Rejeitar</Text>
+        </View>
+
+        {/* Lado Direito: Check (Aceitar) */}
+        <View style={styles.indicatorRight}>
+          <Ionicons name="checkmark-circle-outline" size={50} color="rgba(46, 204, 113, 0.5)" />
+          <Text style={styles.indicatorTextRight}>Aceitar</Text>
+        </View>
+      </View>
       
       <View style={styles.cardContainer}>
         <CardOpcao 
@@ -94,5 +109,32 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   turnText: { fontSize: 28, fontWeight: 'bold', color: '#4a90e2', marginBottom: 10 },
   progressText: { fontSize: 16, color: '#888', marginBottom: 30 },
-  cardContainer: { flex: 1, width: '100%', justifyContent: 'flex-start' }
+  cardContainer: { flex: 1, width: '100%', justifyContent: 'flex-start', zIndex: 2 },
+  indicatorsContainer: {
+    position: 'absolute', // Fica solto na tela
+    bottom: 30,
+    flexDirection: 'row', // Um ao lado do outro
+    width: '100%',        // Ocupa toda a largura
+    justifyContent: 'space-between', // Joga um para cada ponta
+    paddingHorizontal: 30,
+    zIndex: 1             // Fica ATRÁS do cartão
+  },
+  indicatorLeft: {
+    alignItems: 'center',
+    opacity: 0.8
+  },
+  indicatorRight: {
+    alignItems: 'center',
+    opacity: 0.8
+  },
+  indicatorTextLeft: {
+    color: 'rgba(231, 76, 60, 0.6)', // Vermelho claro
+    fontWeight: 'bold',
+    marginTop: 5
+  },
+  indicatorTextRight: {
+    color: 'rgba(46, 204, 113, 0.6)', // Verde claro
+    fontWeight: 'bold',
+    marginTop: 5
+  }
 });

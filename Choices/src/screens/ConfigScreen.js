@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, K
 import { GameContext } from '../context/GameContext';
 
 export default function ConfigScreen({ navigation }) {
-  const { participantes, setParticipantes, opcoes, adicionarOpcao, setJogadorAtual, setJogoFinalizado } = useContext(GameContext);
+  const { participantes, setParticipantes, opcoes, adicionarOpcao, setJogadorAtual, setJogoFinalizado, setJogoEmAndamento } = useContext(GameContext);
   const [textoOpcao, setTextoOpcao] = useState('');
 
   const handleAdd = () => {
@@ -15,7 +15,7 @@ export default function ConfigScreen({ navigation }) {
 
   const alterarParticipantes = (quantidade) => {
     const novoValor = participantes + quantidade;
-    if (novoValor >= 1) {
+    if (novoValor >= 2) {
       setParticipantes(novoValor);
     }
   };
@@ -33,6 +33,7 @@ export default function ConfigScreen({ navigation }) {
 
     setJogadorAtual(1);
     setJogoFinalizado(false);
+    setJogoEmAndamento(true);
     navigation.navigate('Votação');
   };
 

@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   // AQUI É A MÁGICA: Pegamos as opções direto do contexto
-  const { opcoes } = useContext(GameContext);
+  const { opcoes, jogoEmAndamento } = useContext(GameContext);
 
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
@@ -41,7 +41,25 @@ function TabNavigator() {
         tabBarInactiveTintColor: 'gray',  // Cor cinza quando inativo
       })}
     >
-      <Tab.Screen name="Configuração" component={ConfigScreen} />
+      <Tab.Screen 
+        name="Configuração" 
+        component={ConfigScreen}
+        listeners={{
+          tabPress: (e) => {
+            // SE O JOGO ESTIVER ROLANDO, BLOQUEIA:
+            if (jogoEmAndamento) {
+              e.preventDefault(); // Cancela a mudança de aba
+              
+              // Exibe o alerta (Código Híbrido Web/Mobile)
+              if (Platform.OS === 'web') {
+                alert('Jogo em andamento! Termine a partida para reconfigurar.');
+              } else {
+                Alert.alert('Jogo em andamento', 'Você não pode alterar as configurações durante a partida.');
+              }
+            }
+          },
+        }}
+      />
       
       <Tab.Screen 
         name="Votação" 

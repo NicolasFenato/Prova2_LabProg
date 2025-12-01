@@ -10,6 +10,7 @@ export const GameProvider = ({ children }) => {
   // Controle do Jogo
   const [jogadorAtual, setJogadorAtual] = useState(1);
   const [jogoFinalizado, setJogoFinalizado] = useState(false);
+  const [jogoEmAndamento, setJogoEmAndamento] = useState(false);
 
   // Função para adicionar opção
   const adicionarOpcao = (texto) => {
@@ -32,6 +33,7 @@ export const GameProvider = ({ children }) => {
     setParticipantes(2);
     setJogadorAtual(1);
     setJogoFinalizado(false);
+    setJogoEmAndamento(false);
   };
 
   return (
@@ -40,6 +42,7 @@ export const GameProvider = ({ children }) => {
       opcoes, adicionarOpcao,
       jogadorAtual, setJogadorAtual,
       jogoFinalizado, setJogoFinalizado,
+      jogoEmAndamento, setJogoEmAndamento,
       computarVoto, resetarJogo
     }}>
       {children}
