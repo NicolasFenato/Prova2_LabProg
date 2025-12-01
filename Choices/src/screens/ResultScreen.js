@@ -1,23 +1,33 @@
+/* Imports: */
 import React, { useContext, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { GameContext } from '../context/GameContext';
 
+/* Tela de resultados do jogo */
 export default function ResultScreen({ navigation }) {
+
+  // Consome o contexto do jogo, para utilizar os estados e as funções
   const { opcoes, resetarJogo } = useContext(GameContext);
 
+  // Ordena as opções pela quantidade de likes
   const ranking = [...opcoes].sort((a, b) => b.likes - a.likes);
   
+  // Identifica a maior pontuação obtida na partida
   const maiorPontuacao = ranking[0]?.likes || 0;
 
+  // Filtra os que obtiveram a maior pontuação
   const vencedores = ranking.filter(item => item.likes === maiorPontuacao);
 
+  // Flag de empate ( mais de um com maior pontuação ou nenhum voto computado )
   const houveEmpate = vencedores.length > 1 || maiorPontuacao === 0;
 
+  // Função para reiniciar o jogo
   const handleReiniciar = () => {
     resetarJogo();
     navigation.navigate('Home', { screen: 'Configuração' });
   };
 
+  // Configurações do cabeçalho da página
   useLayoutEffect(() => {
 
     navigation.setOptions({
@@ -37,9 +47,10 @@ export default function ResultScreen({ navigation }) {
   return (
     <View style={styles.container}>
       
+      {/* Mostra tela de Empate ou de Vitória */}
       {houveEmpate ? (
         <>
-          <Text style={[styles.title, { color: '#e67e22' }]}>⚠️ Empate! ⚠️</Text>
+          <Text style={[styles.title, { color: '#e67e22' }]}> Empate! </Text>
           <View style={[styles.winnerCard, { backgroundColor: '#e67e22' }]}>
             <Text style={styles.winnerText}>
               {maiorPontuacao === 0 ? "Ninguém curtiu nada!" : "Opções empatadas:"}
@@ -56,7 +67,7 @@ export default function ResultScreen({ navigation }) {
         </>
       ) : (
         <>
-          <Text style={styles.title}>🏆 O Vencedor é: 🏆</Text>
+          <Text style={styles.title}> O Vencedor é: </Text>
           <View style={styles.winnerCard}>
             <Text style={styles.winnerText}>{vencedores[0].texto}</Text>
             <Text style={styles.winnerVotes}>
@@ -66,6 +77,7 @@ export default function ResultScreen({ navigation }) {
         </>
       )}
 
+      {/* Exibe o ranking completo da votação */}
       <Text style={styles.subtitle}>Ranking Completo:</Text>
       <FlatList
         data={ranking}
@@ -81,6 +93,7 @@ export default function ResultScreen({ navigation }) {
         style={{ width: '100%' }}
       />
 
+      {/* Botão de novo jogo -> Reinicia a partida */}
       <TouchableOpacity style={styles.button} onPress={handleReiniciar}>
         <Text style={styles.btnText}>NOVO JOGO</Text>
       </TouchableOpacity>
@@ -88,6 +101,7 @@ export default function ResultScreen({ navigation }) {
   );
 }
 
+/* Estilos: */
 const styles = StyleSheet.create({
   
   container: { 

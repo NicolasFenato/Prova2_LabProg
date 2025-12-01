@@ -1,3 +1,4 @@
+/* Imports: */
 import React, { useContext } from 'react';
 import { Alert, Platform } from 'react-native'; // Importações para o Alerta
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -5,19 +6,30 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { GameContext } from '../context/GameContext';
+// Importação das telas
 import ConfigScreen from '../screens/ConfigScreen';
 import VoteScreen from '../screens/VoteScreen';
 import ResultScreen from '../screens/ResultScreen';
 
+// Inicialização dos objetos de navegação ( BottomTab e Stack )
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+/* Gerenciador das abas inferiores ( BottomTab ) */
 function TabNavigator() {
 
-  const { opcoes, jogoEmAndamento } = useContext(GameContext);
+  // Utiliza o contexto para receber as opções configuradas e a informação de andamento do jogo
+  const { 
+    opcoes, 
+    jogoEmAndamento, 
+    setJogoEmAndamento, 
+    setJogadorAtual, 
+    setJogoFinalizado 
+  } = useContext(GameContext);
 
   return (
 
+    // Configurações visuais para todas as abas
     <Tab.Navigator screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
@@ -36,6 +48,7 @@ function TabNavigator() {
         tabBarInactiveTintColor: 'gray',  
       })}>
 
+      {/* Configurações para a tela de configuração do jogo */}
       <Tab.Screen 
         name="Configuração" 
         component={ConfigScreen}
@@ -55,21 +68,25 @@ function TabNavigator() {
         }}
       />
       
+      {/* Configurações para a tela de votação */}
       <Tab.Screen 
         name="Votação" 
         component={VoteScreen} 
         listeners={{
           tabPress: (e) => {
-            // LÓGICA DE PROTEÇÃO
             if (opcoes.length < 2) {
-              // 1. Impede a navegação de acontecer
               e.preventDefault();
 
-              // 2. Exibe o erro (Compatível Web e Mobile)
               if (Platform.OS === 'web') {
                 alert('Erro: Adicione pelo menos 2 opções antes de votar!');
               } else {
-                Alert.alert('Atenção', 'Adicione pelo menos 2 opções antes de votar!');
+                Alert.alert('Erro: ', 'Adicione pelo menos 2 opções antes de votar!');
+              }
+            } else {
+              if (!jogoEmAndamento) {
+                setJogoEmAndamento(true);  
+                setJogadorAtual(1);        
+                setJogoFinalizado(false);  
               }
             }
           },
@@ -79,9 +96,11 @@ function TabNavigator() {
   );
 }
 
+/* Componete principal da navegação */
 export default function AppNavigator() {
   return (
     <NavigationContainer>
+      {/* O Stack separa a tela home e resultado, para que as abas inferiores fiquem ocultas na tela de resultado */}
       <Stack.Navigator>
         <Stack.Screen name="Home" component={TabNavigator} options={{ title: 'Choices', headerTitleAlign: 'center'}} />
         <Stack.Screen name="Resultado" component={ResultScreen} options={{headerTitleAlign: 'center'}} />

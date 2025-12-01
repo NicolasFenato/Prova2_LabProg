@@ -1,12 +1,17 @@
+/* Imports: */
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, Keyboard, Platform } from 'react-native'; 
 import { GameContext } from '../context/GameContext';
 
+/* Tela de configuração do jogo */
 export default function ConfigScreen({ navigation }) {
 
+  // Consome o contexto do jogo, para utilizar os estados e as funções
   const { participantes, setParticipantes, opcoes, adicionarOpcao, setJogadorAtual, setJogoFinalizado, setJogoEmAndamento } = useContext(GameContext);
+  // Estado local para controle do input
   const [textoOpcao, setTextoOpcao] = useState('');
 
+  // Gerenciamento de novas opções
   const handleAdd = () => {
     if (textoOpcao.trim() === '') return;
     adicionarOpcao(textoOpcao);
@@ -14,6 +19,7 @@ export default function ConfigScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
+  // Gerenciamento da quantidade de participantes ( botões + / - ) com mínimo de 2 jogadores
   const alterarParticipantes = (quantidade) => {
     const novoValor = participantes + quantidade;
     if (novoValor >= 2) {
@@ -21,6 +27,7 @@ export default function ConfigScreen({ navigation }) {
     }
   };
 
+  // Inicia a partida
   const handleStart = () => {
     if (opcoes.length < 2) {
       if (Platform.OS === 'web') {
@@ -42,6 +49,7 @@ export default function ConfigScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Configurar Opções</Text>
 
+      {/* Seção de controle de participantes (Botões +/-) */}
       <Text style={styles.label}>Número de Jogadores:</Text>
       
       <View style={styles.counterContainer}>
@@ -56,7 +64,8 @@ export default function ConfigScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.label}>Adicionar Opção (Ex: Pizza):</Text>
+      {/* Input para adicionar opções */}
+      <Text style={styles.label}>Adicionar Opção:</Text>
       <View style={styles.inputRow}>
         <TextInput
           style={[styles.input, { flex: 1 }]}
@@ -69,6 +78,7 @@ export default function ConfigScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {/* Lista das opções já cadastradas */}
       <FlatList
         data={opcoes}
         keyExtractor={(item) => item.id}
@@ -80,6 +90,7 @@ export default function ConfigScreen({ navigation }) {
         style={styles.list}
       />
 
+      {/* Botão para iniciar o jogo */}    
       <TouchableOpacity style={styles.startButton} onPress={handleStart}>
         <Text style={styles.btnText}>COMEÇAR JOGO</Text>
       </TouchableOpacity>
@@ -88,6 +99,7 @@ export default function ConfigScreen({ navigation }) {
 
 }
 
+/* Estilos: */
 const styles = StyleSheet.create({
   container: { 
     flex: 1,
