@@ -47,6 +47,8 @@ src/
 ├── navigation/      # Configuração de rotas e Route Guards (AppNavigator.js)
 └── screens/         # Telas completas da aplicação (Config, Vote, Result)
 App.js               # Ponto de entrada (Entry Point)
+
+````
  
 ##  Como Rodar o Projeto
 
